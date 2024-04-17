@@ -19,9 +19,10 @@ class Remember {
   async(params = {}) {
     return new Promise(async (resolve, reject) => {
       params = {key: false, seconds: (3600 * 3), callBack: false, refresh: false, inCache: false, ...params}//Validate params
-      if (params.refresh) cache.remove(params.key)//Remove data from cache
+      if (params.refresh && params.inCache) cache.remove(params.key)//Remove data from cache
       let currentDateInSeconds = (new Date().getTime() / 1000)//Current date in seconds
-      let responseData = await cache.get.item(params.key)//Get data from cache
+      let responseData = null//Get data from cache
+      if (params.inCache && !window.navigator.onLine) responseData = await cache.get.item(params.key)
       let dataError = false //To errors
 
       //Validate if was expired
