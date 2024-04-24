@@ -4,7 +4,6 @@ class cacheOffline {
 
   async addNewRecord(apiRoute = null, data = {}) {
     if (!apiRoute) return [];
-    // const route = `${apiRoute}::offline`;
     const cacheResponse = await cache.get.item(apiRoute) || { data: [] };
     await cache.remove(apiRoute);
     await cacheResponse.data.unshift({ ...data });
@@ -14,7 +13,6 @@ class cacheOffline {
 
   async updateRecord(apiRoute = null, data = {}, id) {
     if (!apiRoute) return [];
-    // const route = `${apiRoute}::offline`;
     const cacheResponse = await cache.get.item(apiRoute) || { data: [] };
 
     const dataInCache = structuredClone(cacheResponse);
@@ -25,13 +23,12 @@ class cacheOffline {
       ...dataInCache,
       data: records
     };
-    await cache.set(route, { ...newData });
+    await cache.set(apiRoute, { ...newData });
     return true;
   }
 
   async updateList(apiRoute = null, data) {
     if (!apiRoute) return [];
-    // const route = `${apiRoute}::offline`;
     const cacheResponse = await cache.get.item(apiRoute) || { data: [] };
 
     const dataInCache = structuredClone(cacheResponse);
@@ -42,7 +39,6 @@ class cacheOffline {
 
   async deleteItem(itemId, apiRoute = null) {
     if (!apiRoute) return [];
-    // const route = `${apiRoute}::offline`;
     const cacheResponse = await cache.get.item(apiRoute) || { data: [] };
 
     const dataInCache = structuredClone(cacheResponse);
@@ -57,13 +53,11 @@ class cacheOffline {
 
   async getAllList(apiRoute = null) {
     if (!apiRoute) return [];
-    // const route = `${apiRoute}::offline`;
     return await cache.get.item(apiRoute) || { data: [] };
   }
 
   async getItemById(itemId, apiRoute = null) {
     if (!apiRoute) return [];
-    // const route = `${apiRoute}::offline`;
     const cacheResponse = await cache.get.item(apiRoute) || { data: [] };
     const record = await cacheResponse.data.find(
       item => item.id === itemId

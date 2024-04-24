@@ -225,7 +225,8 @@ module.exports = configure(function(ctx) {
     pwa: {
       workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
-        maximumFileSizeToCacheInBytes: 7000000
+        maximumFileSizeToCacheInBytes: 1024 * 1024 * 10, // 10MB
+        exclude: [/node_modules/, /manifest\.json/],
       }, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
