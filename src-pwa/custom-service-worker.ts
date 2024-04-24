@@ -28,7 +28,7 @@ precacheAndRoute(self.__WB_MANIFEST)
 const requestPOST = new Map<string, Request>()
 const sentPOST = new Map<string, any>()
 const QUEUE_NAME = 'requests'
-const CACHE_NAME = 'stale-while-revalidate'
+const CACHE_NAME = 'requests-cache'
 
 const plugins = [
   new ExpirationPlugin({
