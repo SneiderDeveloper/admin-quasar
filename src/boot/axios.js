@@ -59,25 +59,6 @@ export default function({ app, router, store, ssrContext }) {
     });
   }
 
-  async function addRequestDB(request, userID) {
-    const globalProperties = app.config.globalProperties;
-    const objReq = {
-      _id: new Date().toISOString(),
-      ...request
-    };
-    const allRequests = await cache.get.item('requests') || {};
-    if (allRequests[userID]) {
-      allRequests[userID].push(objReq);
-    } else {
-      allRequests[userID] = [];
-      allRequests[userID].push(objReq);
-    }
-    cache.set('requests', allRequests);
-    alert.standar({
-      message: globalProperties.$tr('isite.cms.message.requestAdded')
-    });
-  }
-
   function getOfflineTitle(config) {
     if (config.data) {
       return config.data.titleOffline || config.params.titleOffline;
@@ -116,7 +97,6 @@ export default function({ app, router, store, ssrContext }) {
         params: config.params,
         titleOffline
       };
-      addRequestDB(request, user.userData.id);
     }
     store.dispatch('quserAuth/REFRESH_TOKEN');
     //Set abortController for the GET methods

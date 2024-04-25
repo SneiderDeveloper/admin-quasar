@@ -153,17 +153,24 @@ const prepareRequest = async (entry) => {
   // by the database as a response to the successful request.
   try {
     const method = entry.request.method
-
+    const requestId = entry.metadata?.requestId
+    
     const dataBody = await transformReadableStreamToObject(entry.request.clone().body)
-    if (dataBody?.attributes?.id) {
-      dataBody.attributes.id = sentPOST.get(entry.metadata?.requestId) || dataBody.attributes.id
+    const idAttribute = dataBody?.attributes?.id
+    const databaseGeneratedId = sentPOST.get(requestId)
+
+    // The sent id in the payload is updated with the real 
+    // id of the record in the database.
+    if (idAttribute && databaseGeneratedId) {
+      dataBody.attributes.id = databaseGeneratedId
     }
+    
     const body = JSON.stringify(dataBody)
 
     const requestAttributes = method === 'DELETE' ? { body: null, method: 'DELETE' } : { body }
     const newRequest = await replaceRequestUrlWithStoredUrl(
       entry.request.clone(),
-      entry.metadata?.requestId,
+      requestId,
       requestAttributes
     )
 
