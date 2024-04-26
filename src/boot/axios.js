@@ -110,11 +110,24 @@ export default function({ app, router, store, ssrContext }) {
     return Promise.reject(error);
   });
   //========== Response interceptor
-  axios.interceptors.response.use((response) => {
+  axios.interceptors.response.use(async (response) => {
     //Show messages
     if (response.data && response.data.messages) {
       showMessages(response.data.messages);
     }
+
+    //Check if the version is updated
+    if (response.headers['x-app-version'] > config('app.version')) {
+      const isRefresh = await cache.get.item('isRefresh')
+
+      if (!isRefresh) {
+        cache.set('isRefresh', true)
+        window.location.reload()
+      }
+
+      router.push({ name: 'app.update.app' })
+    }
+
     //Response
     return response;
   }, (error) => {

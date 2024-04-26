@@ -53,4 +53,15 @@ export default {
     icon: 'fas fa-flask',
     authenticated: true,
   },
+  updateApp: {
+    permission: null,
+    activated: true,
+    path: '/update-app',
+    name: 'app.update.app',
+    layout: () => import('layouts/blank'),
+    page: () => import('src/pages/updateApp'),
+    title: 'sidebar.updateApp',
+    icon: 'fas fa-flask',
+    authenticated: true,
+  },
 }
