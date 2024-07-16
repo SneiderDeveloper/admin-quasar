@@ -206,9 +206,9 @@ const nameDB = () => {
   return `${response.join('')}DB`
 }
 
-const updateCacheData = (response) => {
+const updateCacheData = (response, key='offlineId') => {
   try {
-    const openDB = indexedDB.open(nameDB());
+    const openDB = indexedDB.open('localhost:8080DB');
     const KEY = 'apiRoutes.qramp.workOrders::offline'
 
     openDB.onsuccess = (event) => {
@@ -220,7 +220,7 @@ const updateCacheData = (response) => {
       request.onsuccess = (event) => {
         const data = request.result?.data;
         const newData = data.map(item => {
-          const match = String(item.offlineId) === String(response.offlineId)
+          const match = String(item[key]) === String(response[key])
           return match ? response : item;
         })
         storage.put(
@@ -252,6 +252,11 @@ const queue = new Queue(QUEUE_NAME, {
         }
 
         const response = await fetch(entry.request);
+
+        if (method === 'PUT') {
+          const { data } = await response.json();
+          updateCacheData(data, 'id')
+        }
 
         if (method === 'POST') {
           const { data } = await response.json();
